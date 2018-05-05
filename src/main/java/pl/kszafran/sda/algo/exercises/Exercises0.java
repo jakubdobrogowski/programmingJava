@@ -1,6 +1,14 @@
 package pl.kszafran.sda.algo.exercises;
 
+import org.junit.platform.commons.util.StringUtils;
+
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Zaimplementuj poniższe metody z użyciem wyrażeń lambda i/lub klas Stream oraz Optional.
@@ -12,21 +20,29 @@ public class Exercises0 {
      * określony znak znajduje się w podanym Stringu.
      */
     public OptionalInt indexOf(String string, char c) {
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        int i = string.indexOf(c);
+        return i != -1 ? OptionalInt.of(i) : OptionalInt.empty();
+
     }
 
     /**
      * Znajduje autora książki o podanym tytule.
      */
     public Optional<String> findAuthorByTitle(BookRepository repository, String title) {
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        Optional<Book> byTitle = repository.findByTitle(title);
+        return byTitle.map(e -> e.author);
     }
 
     /**
      * Funkcja zwraca ilość liczb dodatnich w podanej liście.
      */
     public long numPositive(List<Integer> numbers) {
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        return numbers.stream()
+                .filter(e -> e > 0)
+                .count();
     }
 
     /**
@@ -34,7 +50,12 @@ public class Exercises0 {
      * Wynikowa lista jest posortowana alfabetycznie oraz nie zawiera duplikatów.
      */
     public List<String> authorsOf(Book... books) {
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        return Arrays.stream(books)
+                .map(e -> e.author)
+                .sorted(String::compareTo)
+                .distinct()
+                .collect(toList());
     }
 
     /**
@@ -43,14 +64,25 @@ public class Exercises0 {
      * Zwrócone wyrazy zapisane są małymi literami.
      */
     public Set<String> keywordsIn(Book... books) {
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        return Arrays.stream(books)
+                .map(Book::getTitle)
+                .flatMap(e -> Stream.of(e.toLowerCase().split("\\s+")))
+                .map(e -> e.replaceAll("\\W", ""))
+                .filter(e -> StringUtils.isNotBlank(e))
+                .collect(toSet());
     }
 
     /**
      * Zwraca mapę pozwalającą znaleźć książki po tytule.
      */
     public Map<String, Book> byTitle(List<Book> books) {
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        return books.stream()
+                .collect(toMap(
+                        Book::getTitle,
+                        e -> e
+                ));
     }
 
     ////////////////////////////////////////////
@@ -69,7 +101,7 @@ public class Exercises0 {
     /**
      * Funkcja zwraca z podanej list książkę, która ma najwięcej edycji.
      * Jeśli więcej niż jedna książka ma tyle samo edycji, zwrócona jest książka pierwsza w kolejności.
-     *
+     * <p>
      * Podpowiedź: przyda się funkcja Stream.reduce.
      */
     public Optional<Book> findMostEditions(Book... books) {
