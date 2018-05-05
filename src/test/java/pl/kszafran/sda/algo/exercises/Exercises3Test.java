@@ -2,7 +2,6 @@ package pl.kszafran.sda.algo.exercises;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl.kszafran.sda.algo.solutions.Solutions3;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Exercises3Test {
 
-    private Exercises3 exercises = new Solutions3();
+    private Exercises3 exercises = new Exercises3();
 
     private Path tempDir;
     private Path file1txt;
