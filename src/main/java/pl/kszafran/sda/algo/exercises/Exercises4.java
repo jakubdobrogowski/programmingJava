@@ -197,8 +197,8 @@ public class Exercises4 {
 
         private static class Node<T> {
 
-            private final T element;
-            private final Node<T> next;
+            private T element;
+            private Node<T> next;
 
             private Node(T element, Node<T> next) {
                 this.element = element;
