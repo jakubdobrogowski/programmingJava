@@ -1,14 +1,11 @@
 package pl.kszafran.sda.algo.exercises;
 
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -25,7 +22,15 @@ public class Exercises3 {
      * Zwraca -1 jeśli element nie znajduje się w tablicy.
      */
     public int linearSearch(int[] array, int value) {
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        for (int i = 0; i < array.length; i++) {
+
+            if (array[i] == value) {
+
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -33,14 +38,60 @@ public class Exercises3 {
      * Zwraca -1 jeśli element nie znajduje się w tablicy.
      */
     public int binarySearch(int[] array, int value) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        int begin = 0;
+        int end = array.length;
+        int x = 0;
+
+        for (int j = 0; j < array.length; j++) {
+
+            x = (end - begin) / 2;
+
+            if (array[j] == value) {
+
+                return j;
+            }
+
+            if (array[j] >= value) {
+
+                end = x;
+
+            } else {
+
+                begin = x;
+            }
+        }
+        return -1;
     }
 
     /**
      * Wyszukuje element o wartości value w podanej POSORTOWANEJ liście i zwraca jego indeks.
      */
     public <T> Optional<Integer> indexOf(List<T> list, T value, Comparator<T> comparator) {
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        int begin = 0;
+        int end = list.size();
+        int x = 0;
+
+        for (int j = 0; j < list.size(); j++) {
+
+            x = (end - begin) / 2;
+
+            if (comparator.compare(list.get(j), value) == 0) {   //list.get(j) == value
+
+                return Optional.of(j);
+            }
+
+            if (comparator.compare(list.get(j), value) < 0) {  //list.get(j) >= value
+
+                end = x;
+
+            } else {
+
+                begin = x;
+            }
+        }
+        return Optional.empty();
+
     }
 
     ////////////////////////////////////////////
@@ -51,18 +102,19 @@ public class Exercises3 {
 
     /**
      * Wyszukuje wszystkie elementy o wartości value w podanej POSORTOWANEJ tablicy i zwraca zakres ich indeksów.
-     *
+     * <p>
      * Uwaga: istnieją dwie możliwe implementacje, jedna o stałej złożoności O(log n)
      * oraz druga, która potrafi zdegradować się do złożoności O(n) w najgorszym przypadku.
      */
     public Optional<IntRange> binarySearchRange(int[] array, int value) {
+
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
     /**
      * Wyszukuje element o wartości value w podanej POSORTOWANEJ tablicy i zwraca jego indeks.
      * Zwraca -1 jeśli element nie znajduje się w tablicy.
-     *
+     * <p>
      * Uwaga: należy zastosować wyszukiwanie interpolacyjne (interpolation search).
      */
     public int interpolationSearch(int[] array, int value) {
