@@ -67,11 +67,56 @@ public class Exercises6 {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
+    /**
+     * Tworzy drzewo binarne na podstawie podanego tekstu.
+     *
+     * Tekst zawiera tyle linijek, ile poziomów ma drzewo.
+     * Każda linijka zawiera wartości węzłów na odpowiednim poziomie rozdzielone spacjami, po kolei,
+     * czyli każda linijka zawiera dwa razy więcej wartości niż poprzednia.
+     * Wartość "-" oznacza, że węzeł na danej pozycji nie istnieje.
+     *
+     * Np. drzewo ze slajdów przedstawione byłoby jako "F\nB G\nA D - I\n- - C E - - H -",
+     * czyli zapisując w wielu liniach:
+     * F
+     * B G
+     * A D - I
+     * - - C E - - H -
+     *
+     * Uwaga: nie należy modyfikować klas SdaTree i SdaTreeImpl.
+     *
+     * @throws IllegalArgumentException jeśli któraś z linijek zawiera nieprawidłową ilość wartości
+     */
+    public SdaTree<String> buildTree1(String input) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
     ////////////////////////////////////////////
     //                                        //
     // PONIŻEJ ZADANIA DODATKOWE DLA CHĘTNYCH //
     //                                        //
     ////////////////////////////////////////////
+
+    /**
+     * Tworzy drzewo binarne na podstawie podanego tekstu.
+     *
+     * Każda linijka zawiera informację o parze rodzic-dziecko.
+     * Format każdej linijki wygląda następująco:
+     *
+     * left(rodzic)=dziecko
+     *
+     * lub
+     *
+     * right(rodzic)=dziecko
+     *
+     * dla lewego i prawego dziecka odpowiednio.
+     *
+     * Uwaga: nie należy modyfikować klas SdaTree i SdaTreeImpl.
+     *
+     * @throws IllegalArgumentException jeśli któraś z linijek jest niezgodna z powyższym formatem
+     */
+    public SdaTree<String> buildTree2(String input) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
 
     /**
      * Funkcja oblicza wysokość drzewa.
