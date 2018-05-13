@@ -4,6 +4,8 @@ import pl.kszafran.sda.algo.exercises.Exercises6;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.util.Collections.singletonList;
 
@@ -96,6 +98,83 @@ public class Solutions6 extends Exercises6 {
     }
 
     @Override
+    public SdaTree<String> buildTree1(String input) {
+        String[][] values = Arrays.stream(input.split("\n"))
+                .map(line -> line.split("\\s+"))
+                .toArray(String[][]::new);
+        validate(values);
+        return buildTree1(values, 0, 0);
+    }
+
+    private void validate(String[][] values) {
+        for (int i = 0; i < values.length; i++) {
+            int expected = 1 << i;
+            int actual = values[i][0].isEmpty() ? 0 : values[i].length;
+            if (actual != expected) {
+                throw new IllegalArgumentException("Expected " + expected + " values at depth " + i + ", got " + actual);
+            }
+        }
+    }
+
+    private <T> SdaTree<T> buildTree1(T[][] values, int depth, int offset) {
+        if (depth == values.length || "-".equals(values[depth][offset])) {
+            return null;
+        }
+        return SdaTree.of(values[depth][offset],
+                buildTree1(values, depth + 1, offset * 2),
+                buildTree1(values, depth + 1, offset * 2 + 1));
+    }
+
+    @Override
+    public SdaTree<String> buildTree2(String input) {
+        Pattern pattern = Pattern.compile("(left|right)\\((.+)\\)=(.+)");
+
+        Children<String> children = new Children<>();
+        for (String line : input.split("\n")) {
+            Matcher matcher = pattern.matcher(line);
+            if (!matcher.matches()) {
+                throw new IllegalArgumentException("Invalid line: " + line);
+            }
+            children.add(matcher.group(1), matcher.group(2), matcher.group(3));
+        }
+
+        return children.buildTree();
+    }
+
+    private static class Children<T> {
+
+        private final Map<T, T> parentToLeft = new HashMap<>();
+        private final Map<T, T> parentToRight = new HashMap<>();
+
+        public void add(String side, T parent, T child) {
+            ("left".equals(side) ? parentToLeft : parentToRight).put(parent, child);
+        }
+
+        public SdaTree<T> buildTree() {
+            return buildTree(findRoot());
+        }
+
+        private SdaTree<T> buildTree(T parent) {
+            return parent == null ? null : SdaTree.of(
+                    parent,
+                    buildTree(parentToLeft.get(parent)),
+                    buildTree(parentToRight.get(parent)));
+        }
+
+        private T findRoot() {
+            Set<T> roots = new HashSet<>();
+            roots.addAll(parentToLeft.keySet());
+            roots.addAll(parentToRight.keySet());
+            roots.removeAll(parentToLeft.values());
+            roots.removeAll(parentToRight.values());
+            if (roots.size() != 1) {
+                throw new IllegalArgumentException("Expected exactly one root, got " + roots.size());
+            }
+            return roots.iterator().next();
+        }
+    }
+
+    @Override
     public int calcHeight(SdaTree<?> tree) {
         return Math.max(
                 tree.getLeftChild().map(left -> 1 + calcHeight(left)).orElse(0),
@@ -160,8 +239,7 @@ public class Solutions6 extends Exercises6 {
 
     @Override
     public <T> T findMax(SdaTree<T> tree, Comparator<T> comparator) {
-        return traversePreOrder(tree).stream()
-                .reduce(tree.getValue(), (v1, v2) -> comparator.compare(v1, v2) > 0 ? v1 : v2);
+        return traversePreOrder(tree).stream().max(comparator).get();
     }
 
     // Alternatywne rozwiązanie:

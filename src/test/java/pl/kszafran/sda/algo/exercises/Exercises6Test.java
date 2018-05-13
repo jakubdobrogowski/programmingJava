@@ -4,10 +4,12 @@ import org.junit.jupiter.api.Test;
 import pl.kszafran.sda.algo.exercises.Exercises6.SdaTree;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.reverseOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class Exercises6Test {
 
@@ -65,11 +67,41 @@ public class Exercises6Test {
         assertEquals(1, exercises.countLeaves(SdaTree.leaf(42)));
     }
 
+    @Test
+    void test_buildTree1() {
+        assertTreeEquals(exampleTree, exercises.buildTree1("F\nB G\nA D - I\n- - C E - - H -"));
+        assertTreeEquals(SdaTree.leaf("root"), exercises.buildTree1("root"));
+        assertThrows(IllegalArgumentException.class, () -> exercises.buildTree1(""));
+        assertThrows(IllegalArgumentException.class, () -> exercises.buildTree1("r1 r2"));
+        assertThrows(IllegalArgumentException.class, () -> exercises.buildTree1("F\nB G\nA D - I\n- C E - - H -"));
+    }
+
     ////////////////////////////////////////////
     //                                        //
     // PONIŻEJ ZADANIA DODATKOWE DLA CHĘTNYCH //
     //                                        //
     ////////////////////////////////////////////
+
+    @Test
+    void test_buildTree2() {
+        assertTreeEquals(exampleTree, exercises.buildTree2(String.join("\n",
+                "left(F)=B",
+                "left(B)=A",
+                "right(B)=D",
+                "left(D)=C",
+                "right(D)=E",
+                "right(F)=G",
+                "right(G)=I",
+                "left(I)=H")));
+        assertTreeEquals(SdaTree.of("root", SdaTree.leaf("only"), null), exercises.buildTree2("left(root)=only"));
+        assertTreeEquals(SdaTree.of("root", null, SdaTree.leaf("only")), exercises.buildTree2("right(root)=only"));
+        assertThrows(IllegalArgumentException.class, () -> exercises.buildTree2(String.join("\n",
+                "left(F)=B",
+                "left(X)=Z")));
+        assertThrows(IllegalArgumentException.class, () -> exercises.buildTree2(""));
+        assertThrows(IllegalArgumentException.class, () -> exercises.buildTree2("left(X)="));
+        assertThrows(IllegalArgumentException.class, () -> exercises.buildTree2("left (X)=Z"));
+    }
 
     @Test
     void test_calcHeight() {
@@ -99,5 +131,26 @@ public class Exercises6Test {
 
         assertEquals(10, (int) exercises.findMax(tree, naturalOrder()));
         assertEquals(1, (int) exercises.findMax(tree, reverseOrder()));
+    }
+
+    private <T> void assertTreeEquals(SdaTree<T> expected, SdaTree<T> actual) {
+        assertEquals(print(expected), print(actual));
+    }
+
+    private String print(SdaTree<?> tree) {
+        return print(tree, "").toString();
+    }
+
+    private CharSequence print(SdaTree<?> tree, String indent) {
+        StringBuilder sb = new StringBuilder(indent).append(tree.getValue());
+        if (tree.getLeftChild().isPresent() || tree.getRightChild().isPresent()) {
+            sb.append('\n').append(child(indent, tree.getLeftChild()));
+            sb.append('\n').append(child(indent, tree.getRightChild()));
+        }
+        return sb;
+    }
+
+    private CharSequence child(String indent, Optional<? extends SdaTree<?>> child) {
+        return child.map(left -> print(left, indent + "  ")).orElse(indent + "  (none)");
     }
 }
