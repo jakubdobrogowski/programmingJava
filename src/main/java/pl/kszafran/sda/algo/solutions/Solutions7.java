@@ -176,9 +176,9 @@ public class Solutions7 extends Exercises7 {
             } else if (node.value.compareTo(element) > 0) { // węzeł do usunięcia znajduje się w lewym poddrzewie
                 node.left = delete(node.left, element);
                 return node;
-            } else if (node.left == null) {                 // węzeł do usunięcia ma co najwyżej jedno dziecko
+            } else if (node.left == null) {                 // węzeł do usunięcia ma co najwyżej prawe dziecko
                 return node.right;
-            } else if (node.right == null) {                // węzeł do usunięcia ma co najwyżej jedno dziecko
+            } else if (node.right == null) {                // węzeł do usunięcia ma co najwyżej lewe dziecko
                 return node.left;
             } else {                                        // węzeł do usunięcia ma dwoje dzieci
                 Node successor = node.right;
