@@ -24,16 +24,16 @@ public class Solutions7 extends Exercises7 {
 
     @Override
     public <T extends Comparable<T>> SdaHeap<T> createHeap(T[] heap, int capacity) {
-        return new FixedSizeHeapSdaHeap<>(heap, capacity);
+        return new FixedSizeSdaHeap<>(heap, capacity);
     }
 
-    private static class FixedSizeHeapSdaHeap<T extends Comparable<T>> implements SdaHeap<T> {
+    private static class FixedSizeSdaHeap<T extends Comparable<T>> implements SdaHeap<T> {
 
         private T[] heap;
         private int size;
 
         // zakładamy, że "heap" jest poprawnym kopcem
-        public FixedSizeHeapSdaHeap(T[] heap, int capacity) {
+        public FixedSizeSdaHeap(T[] heap, int capacity) {
             this.heap = Arrays.copyOf(heap, capacity);
             this.size = heap.length;
         }

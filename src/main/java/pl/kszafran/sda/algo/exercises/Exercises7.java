@@ -18,7 +18,7 @@ public class Exercises7 {
     }
 
     public <T extends Comparable<T>> SdaHeap<T> createHeap(T[] heap, int capacity) {
-        return new FixedSizeHeapSdaHeap<>(heap, capacity);
+        return new FixedSizeSdaHeap<>(heap, capacity);
     }
 
     public interface SdaHeap<T extends Comparable<T>> {
@@ -48,13 +48,13 @@ public class Exercises7 {
         T[] toArray();
     }
 
-    private static class FixedSizeHeapSdaHeap<T extends Comparable<T>> implements SdaHeap<T> {
+    private static class FixedSizeSdaHeap<T extends Comparable<T>> implements SdaHeap<T> {
 
         private T[] heap;
         private int size;
 
         // zakładamy, że "heap" jest poprawnym kopcem
-        public FixedSizeHeapSdaHeap(T[] heap, int capacity) {
+        public FixedSizeSdaHeap(T[] heap, int capacity) {
             this.heap = Arrays.copyOf(heap, capacity);
             this.size = heap.length;
         }
