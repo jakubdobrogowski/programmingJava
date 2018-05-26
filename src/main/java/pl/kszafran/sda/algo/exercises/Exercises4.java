@@ -1,9 +1,7 @@
 package pl.kszafran.sda.algo.exercises;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.function.Consumer;
 
 /**
  * Zaimplementuj poniższe metody operujące na liście wiązanej jednokierunkowej.
@@ -17,6 +15,7 @@ public class Exercises4 {
 
         return new SdaLinkedList<>(elements);
     }
+
 
     public interface SdaList<T> extends Iterable<T> {  //tu jest interfejs
 
@@ -80,6 +79,7 @@ public class Exercises4 {
          */
         void removeLast();
 
+
         ////////////////////////////////////////////
         //                                        //
         // PONIŻEJ ZADANIA DODATKOWE DLA CHĘTNYCH //
@@ -112,18 +112,58 @@ public class Exercises4 {
          * @throws IndexOutOfBoundsException jeśli indeks leży poza zakresem listy
          */
         void removeAt(int index);
+
+        /**
+         * Odwraca kolejność wszystkich elementów w liście
+         */
+        void reverse();
+
+        /**
+         * Odwraca kolejność wszystkich elementów w liście, ale tutaj uzyje tego ze
+         * lista jest dwukierunkowa
+         */
+        void reverseWithUsingPrev();
+
+        /**
+         * Kopjuje listę
+         * <p>
+         * Uwaga: żadne instancje klasy Node nie mogą być współdzielone pomiędzy oryginalną listą i kopią.
+         * Wartości T, czyli Node.element, mogą (a wręcz MUSZĄ) być współdzielone.
+         */
+        SdaList<T> copy();
+
+        /**
+         * Metoda która  która pozwala wstawić do środka listy dowolną ilość nowych elementów.
+         * Rozwiązanie musi działać w czasie liniowym O(n), czyli innymi słowy nie wystarczy przejść pętlą
+         * po “elements” i zawołać wersję addAt(..), która przyjmuje jeden element
+         */
+
+        void addAt(int index, T... elements);
+
     }
 
     private static class SdaLinkedList<T> implements SdaList<T> {
 
-        private Node<T> head; // pole typu Node w klasie SdaLinkedList
+        private Node<T> head;
+        private Node<T> before;
+        // private Node<T> tail;  chyba tego nie powinno być
 
         public SdaLinkedList(T[] elements) {
 
-            for (int i = elements.length - 1; i >= 0; i--) {
+//            for (int i = elements.length - 1; i >= 0; i--) {
+//
+//                head = new Node<>(elements[i], head);
+//            }
 
-                head = new Node<>(elements[i], head);
+            for (int i = elements.length - 1; i >= 0; i--) {
+                addFirst(elements[i]);
             }
+
+        }
+
+        public SdaLinkedList() { // konsturktor domyślny tworzy pustą listę
+
+            head = null;
         }
 
         @Override
@@ -137,14 +177,31 @@ public class Exercises4 {
 
         @Override
         public int size() {
-            int COUNTER = 0;
+
+/*            int COUNTER = 0;
             Node<T> iter = head;
             while (iter != null) {
 
                 iter = iter.next;
                 COUNTER++;
             }
-            return COUNTER;
+            return COUNTER;*/
+
+            Node<T> iter = head;
+            int counter = 0;
+            if (iter != null) {
+
+                counter = counter + size(iter);
+            }
+            return counter;
+        }
+
+        private int size(Node<T> iter) {
+
+            if (iter == null) {
+                return 0;
+            }
+            return 1 + size(iter.next);
         }
 
         @Override
@@ -169,41 +226,66 @@ public class Exercises4 {
 
                 return head.element;
             }
-            Node<T> iter = head.next;
-            while (iter.next != null) {
+            Node<T> node = head.next;
+            return getLast(node);
+          /*  while (node.next != null) {
 
-                iter = iter.next;
+                node = node.next;
             }
-            return iter.element;
+            return node.element;*/
+
+        }
+
+        private T getLast(Node<T> node) {
+
+            if (node.next == null) {
+
+                return node.element;
+            }
+            return getLast(node.next);
         }
 
         @Override
         public T get(int index) {
 
-            int COUNTER = 0;
+            // int COUNTER = 0;
+            int offset = 0;
             if (head == null) {
                 throw new IndexOutOfBoundsException();
             }
 
-            Node<T> iter = head;
-            Node<T> iterSec = head.next;
-            while (iterSec != null) {
+            Node<T> node = head;
+            return get(node, index, offset);
 
-                iterSec = iterSec.next;
+        /*    while (node.next != null) {
 
                 if (index == COUNTER) {
                     break;
                 }
-                iter = iter.next;
+                node = node.next;
                 COUNTER++;
             }
             if (index < 0 || index > COUNTER) {
 
                 throw new IndexOutOfBoundsException();
             }
+            return node.element;*/
 
-            return iter.element;
         }
+
+        private T get(Node<T> node, int index, int offset) {
+
+            if (node == null) {
+
+                throw new IndexOutOfBoundsException();
+            }
+            if (offset == index) {
+
+                return node.element;
+            }
+            return get(node.next, index, offset + 1);
+        }
+
 
         @Override
         public void clear() {
@@ -214,7 +296,12 @@ public class Exercises4 {
         @Override
         public void addFirst(T element) {
 
-            head = new Node<>(element, head);
+            Node<T> node = new Node<>(element, head, null);
+            if (head != null) {
+                head.prev = node;
+            }
+            head = node;
+
         }
 
         @Override
@@ -225,13 +312,28 @@ public class Exercises4 {
                 addFirst(element);
                 return;
             }
-            Node<T> iter = head;
-            while (iter.next != null) {
+            Node<T> node = head;
+           /* while (node.next != null) {
 
-                iter = iter.next;
+                node = node.next;
             }
 
-            iter.next = new Node<>(element, null);
+            node.next = new Node<>(element, null);*/
+
+
+            //      Node<T> nodeLast = tail; //yiii
+            //  addLast(node, nodeLast, element);  //tu teź
+        }
+
+        private void addLast(Node<T> node, Node<T> nodeLast, T element) {
+
+            if (node.next == null) {
+
+                node.prev = new Node<>(element, node, node.prev);
+                node.next = new Node<>(element, null, node.prev);
+                return;
+            }
+            addLast(node.next, nodeLast.prev, element);
         }
 
         @Override
@@ -244,7 +346,6 @@ public class Exercises4 {
                 head = null;
                 return;
             }
-            // head = new Node<>(null, head);
 
             head = head.next;
         }
@@ -261,14 +362,26 @@ public class Exercises4 {
                 return;
             }
 
-            Node<T> iter = head;
-            while (iter.next.next != null) {
+            Node<T> node = head;
+        /*    while (node.next.next != null) {
 
-                iter = iter.next;
+                node = node.next;
             }
 
-            iter.next = null;
+            node.next = null;*/
 
+            removeLast(node);
+
+        }
+
+        private void removeLast(Node<T> node) {
+
+            if (node.next.next == null) {
+
+                node.next = null;
+                return;
+            }
+            removeLast(node.next);
         }
 
         ////////////////////////////////////////////                                                 // // // // // // // // // // // // // // // // // //
@@ -279,55 +392,337 @@ public class Exercises4 {
 
         @Override
         public Iterator<T> iterator() {
-
-
             return new Iterator<>() {
 
+                private Node<T> node = head;
+
+                private int counter = -1;
+                private boolean canRemove = false;
 
                 @Override
                 public boolean hasNext() {
 
-                    return head!=null;
+                    return node != null; // kumam
                 }
 
                 @Override
                 public T next() {
 
-                    if (head == null) {
-                        throw new NoSuchElementException();
+                    if (hasNext()) {
+
+                        counter++;
+                        T element = node.element;
+                        node = node.next;
+                        canRemove = true;
+                        return element;
                     }
+                    throw new NoSuchElementException();
+                }
 
-                    Node<T> temp = head;
-                    head = head.next;
-                    return temp.element;
+                @Override
+                public void remove() {
 
+                    if (!canRemove) {
+                        throw new IllegalStateException();
+                    }
+                    removeAt(counter);
+                    canRemove = false;
                 }
             };
         }
 
         @Override
         public void setAt(int index, T element) {
-            throw new UnsupportedOperationException("Not implemented yet");
+
+            int offset = 0;
+
+            if (index < 0) {
+                throw new IndexOutOfBoundsException();
+            }
+            if (head == null) {
+                throw new IndexOutOfBoundsException();
+            }
+            Node<T> node = head;
+            /*for (int i = 0; i < index; i++) {
+i
+                if (node.next == null) {
+                    throw new IndexOutOfBoundsException();
+                }
+                node = node.next;
+            }
+            node.element = element;*/
+
+            setAt(node, index, element, offset);
+        }
+
+        private void setAt(Node<T> node, int index, T element, int offset) {
+
+            if (node == null) {
+
+                throw new IndexOutOfBoundsException();
+            }
+            if (offset == index) {
+
+                node.element = element;
+                return;
+            }
+            setAt(node.next, index, element, offset + 1);
         }
 
         @Override
         public void addAt(int index, T element) {
-            throw new UnsupportedOperationException("Not implemented yet");
+            int offset = 0;
+       /*     if (index < 0) {
+                throw new IndexOutOfBoundsException();
+            }
+
+            if (index > size()) {
+
+                throw new IndexOutOfBoundsException();
+            }*/
+            if (index == 0) {
+                addFirst(element);
+                return;
+            }
+            if (isEmpty()) {
+
+                throw new IndexOutOfBoundsException();
+            }
+            Node<T> node = head;
+            addAt(node, index, element, offset);
+            /*for (int i = 0; i < index - 1; i++) {
+
+                node = node.next;
+            }
+            node.next = new Node<T>(element, node.next);*/
+        }
+
+        private void addAt(Node<T> node, int index, T element, int offset) {
+
+            if (node == null) {
+                if (index == size()) {
+
+                    addLast(element);
+                    return;
+                }
+                throw new IndexOutOfBoundsException();
+            }
+            if (index - 1 == offset) {
+
+                //   node.next = new Node<>(element, node.next);
+                return;
+            }
+            addAt(node.next, index, element, offset + 1);
         }
 
         @Override
         public void removeAt(int index) {
-            throw new UnsupportedOperationException("Not implemented yet");
+            int offset = 0;
+      /*      if (index < 0) {
+                throw new IndexOutOfBoundsException();
+            }
+
+            if (index > size()) {
+
+                throw new IndexOutOfBoundsException();
+            }*/
+
+            if (isEmpty()) {
+
+                throw new IndexOutOfBoundsException();
+            }
+
+            if (index == 0) {
+                head = head.next;
+                return;
+            }
+            Node<T> node = head;
+
+
+//            for (int i = 0; i < index - 1; i++) {
+//
+//                node = node.next;
+//            }
+//
+//            node.next = node.next.next;
+
+            removeAt(node, index, offset);
+        }
+
+        private void removeAt(Node<T> node, int index, int offset) {
+
+            if (node.next == null) {
+
+                throw new IndexOutOfBoundsException();
+            }
+
+            if (index - 1 == offset) {
+
+                node.next = node.next.next;
+                return;
+            }
+
+            removeAt(node.next, index, offset + 1);
+        }
+
+        @Override
+        public void reverse() {
+
+//            int size = size();
+//            Node rep = null;
+//
+//            for (int i = 0; i < size; i++) {
+//
+//                Node<T> next = head.next; //2 //3 //4
+//                head.next = rep; //null //1 //2 //tu się dzieje cała magia
+//                rep = head; //1 //2 //3
+//                head = next; //2 //3
+//            }
+//            head = rep;
+
+            reverse(head.next, null);
+        }
+
+        private void reverse(Node<T> current, Node<T> previous) {
+
+            if (current == null) {
+                head = previous;
+                return;
+            }
+            current = head.next;
+            head.next = previous;
+            previous = head;
+            head = current;
+            reverse(current, previous);
+        }
+
+
+//        @Override
+//        public void reverseWithUsingPrev() {
+//            int offset = 0;
+//            Node<T> iter = head;
+//
+//            reverseWithUsingPrev(head, offset);
+//        }
+//
+//        private void reverseWithUsingPrev(Node<T> head, int offset) {
+//
+//            if (size() % 2 == 0) {
+//
+//                if ((size() / 2) == offset) {
+//
+//                    return;
+//                }
+//            } else {
+//
+//                if ((size() / 2) == offset) {
+//
+//                    return;
+//                }
+//            }
+//
+//
+//            swap(head, head.prev);
+//            reverseWithUsingPrev(head.next, head.prev, offset + 1);
+//        }
+//
+//        private void swap(Node<T> head, Node<T> tail) {
+//
+//            Node<T> temp = head;
+//            head = tail;
+//            tail = head;
+//        }
+
+        @Override
+        public void reverseWithUsingPrev() {
+
+            reverseWithUsingPrev(head);
+        }
+
+        // jaka listę najłatwiej odwrócić?
+        // zawierającą jeden element.
+
+        private void reverseWithUsingPrev(Node<T> iter) {
+
+            if (iter == null) {
+
+                return;
+            }
+            if (iter.prev == null) {
+
+                Node<T> node = head;
+                head = head.next;
+                head.next = node;
+            } else {
+
+                Node<T> node = head.next;
+                head.next = head.prev;
+                head.prev = node;
+            }
+            reverseWithUsingPrev(iter.next);
+        }
+
+        @Override
+        public SdaList<T> copy() {
+
+            SdaList<T> list = new SdaLinkedList<>();
+            Node<T> node = head;
+            copy(node, list);
+            return list;
+        }
+
+        private void copy(Node<T> node, SdaList<T> list) {
+            if (node == null) {
+
+                return;
+            }
+            list.addLast(node.element);
+            copy(node.next, list);
+        }
+
+        @Override
+        public void addAt(int index, T... elements) {
+
+            int offset = 0;
+            Node<T> node = head;
+            addAt(node, offset, index, elements);
+
+
+        }
+
+        private void addAt(Node<T> node, int offset, int index, T[] elements) {
+
+            if (node == null) {
+                return;
+            }
+            if (offset == index) {
+
+                for (T element : elements) {
+
+                    //       node.next = new Node<>(element, node.next);
+                }
+                return;
+            }
+            addAt(node.next, offset + 1, index, elements);
+
         }
 
         private static class Node<T> {
 
-            private T element;  // element typu T
-            private Node<T> next; // następny obiekt klasy Node
+            private T element;
+            private Node<T> next;
+            private Node<T> prev;
 
-            private Node(T element, Node<T> next) {
+//            private Node(T element, Node<T> next) {
+//                this.element = element;
+//                this.next = next;
+//
+//            }
+
+            private Node(T element, Node<T> next, Node<T> prev) {
                 this.element = element;
                 this.next = next;
+                this.prev = prev;
             }
         }
     }

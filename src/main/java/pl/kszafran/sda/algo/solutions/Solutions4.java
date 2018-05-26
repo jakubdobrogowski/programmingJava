@@ -22,6 +22,11 @@ public class Solutions4 extends Exercises4 {
             }
         }
 
+        public SdaLinkedList() { // konsturktor domyślny tworzy pustą listę
+
+            head = null;
+        }
+
         @Override
         public boolean isEmpty() {
             return head == null;
@@ -154,6 +159,48 @@ public class Solutions4 extends Exercises4 {
                 }
                 prev.next = prev.next.next;
             }
+        }
+
+        @Override
+        public void reverse() {
+
+            Node<T> node = head;
+            T last = getLast();
+            node = new Node<>(last, null);
+            node.next = new Node<>(node.element, node);
+        }
+
+        @Override
+        public void reverseWithUsingPrev() {
+
+
+        }
+
+        @Override
+        public SdaList<T> copy() {
+
+            SdaList<T> list = new SdaLinkedList<>();
+            Node<T> node = head;
+            copy(node, list);
+
+
+            return list;
+        }
+
+        @Override
+        public void addAt(int index, T... elements) {
+
+
+
+        }
+
+        private void copy(Node<T> node, SdaList<T> list) {
+            if (node.next == null) {
+
+                return;
+            }
+            list.addLast(node.element);
+            copy(node.next, list);
         }
 
         private Node<T> nodeLast() {

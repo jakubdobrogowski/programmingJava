@@ -3,12 +3,11 @@ package pl.kszafran.sda.algo.exercises;
 import org.junit.platform.commons.util.StringUtils;
 
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 
 /**
  * Zaimplementuj poniższe metody z użyciem wyrażeń lambda i/lub klas Stream oraz Optional.
@@ -95,7 +94,11 @@ public class Exercises0 {
      * Zwraca mapę pozwalającą znaleźć książki po autorze.
      */
     public Map<String, Set<Book>> byAuthor(List<Book> books) {
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        return books.stream()
+                .collect(Collectors.groupingBy(Book::getAuthor,
+                        mapping(e -> e, toSet())));
+
     }
 
     /**
@@ -105,7 +108,10 @@ public class Exercises0 {
      * Podpowiedź: przyda się funkcja Stream.reduce.
      */
     public Optional<Book> findMostEditions(Book... books) {
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        return Arrays.stream(books)
+                .reduce((a, b) -> b.getNumEditions() > a.getNumEditions() ? b : a);
+
     }
 
     /*

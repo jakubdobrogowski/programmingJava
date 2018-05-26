@@ -5,6 +5,7 @@ import pl.kszafran.sda.algo.exercises.Exercises6.SdaTree;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.reverseOrder;
@@ -75,6 +76,34 @@ public class Exercises6Test {
         assertThrows(IllegalArgumentException.class, () -> exercises.buildTree1("r1 r2"));
         assertThrows(IllegalArgumentException.class, () -> exercises.buildTree1("F\nB G\nA D - I\n- C E - - H -"));
     }
+
+    ////////////////////////////////////////////
+    //                                        //
+    //           Z PRACY DOMOWEJ              //
+    //                                        //
+    ////////////////////////////////////////////
+
+    private SdaTree<String> exampleTree1 =
+            SdaTree.of("Michał",
+                    SdaTree.of("Franek",
+                            SdaTree.leaf("Jacek"),
+                            SdaTree.of("Jasiek",
+                                    SdaTree.leaf("Piotrek"),
+                                    SdaTree.leaf("Kuba"))),
+                    SdaTree.of("Krzysiek",
+                            null,
+                            SdaTree.of("Kordialik",
+                                    SdaTree.leaf("Przemek"),
+                                    null)));
+
+    @Test
+    void test_filterUsingPredicate() {
+
+        Predicate<String> predicate = e -> e.length() == 6;
+        assertEquals(List.of("Franek", "Jasiek", "Michał"), exercises.filtrUsingPredicate(exampleTree1, predicate));
+
+    }
+
 
     ////////////////////////////////////////////
     //                                        //

@@ -22,8 +22,7 @@ public class Exercises2 {
     }
 
     public IntSortingAlgorithm createQuicksort() {
-//        return new Quicksort();
-        throw new UnsupportedOperationException("Not implemented yet");
+        return new Quicksort();
     }
 
     ////////////////////////////////////////////

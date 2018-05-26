@@ -1,9 +1,12 @@
 package pl.kszafran.sda.algo.exercises;
 
+import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
 import pl.kszafran.sda.algo.exercises.Exercises4.SdaList;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -69,6 +72,15 @@ public class Exercises4Test {
         assertEquals("kolme", list.get(0));
         assertEquals("kaksi", list.get(1));
         assertEquals("yksi", list.get(2));
+    }
+
+    @Test
+    void test_addFirstDwukierunkowa() {
+
+        SdaList<Integer> list = exercises.createList(1,2,3);
+        list.addFirst(0);
+
+
     }
 
     @Test
@@ -138,7 +150,25 @@ public class Exercises4Test {
         // Uwaga: dzięki temu, że nasz interfejs rozszerza Iterable, możemy używać pętli for-each:
         for (String element : exercises.createList("yksi", "kaksi", "kolme")) {
             // ...
+
+
         }
+    }
+
+    @Test
+    void test_remove() {
+
+        SdaList<Integer> lists = exercises.createList(1, 2, 3, 4, 5, 6, 7, 8, 9);
+
+        Iterator<Integer> iterator = lists.iterator();
+
+        while (iterator.hasNext()) {
+            if (iterator.next() == 2) {
+                iterator.remove();
+            }
+        }
+
+        assert lists.get(1) == 3;
     }
 
     @Test
@@ -197,5 +227,63 @@ public class Exercises4Test {
         list.removeAt(0);
         assertTrue(list.isEmpty());
         assertThrows(IndexOutOfBoundsException.class, () -> exercises.createList().removeAt(0)); // pusta lista
+    }
+
+    @Test
+    void test_reverse() {
+        SdaList<Integer> list = exercises.createList(1,2,3,4,5);
+
+        list.reverse();
+
+        for (Integer integer : list) {
+
+            System.out.println(integer);
+        }
+    }
+
+    @Test
+    void test_reverseWithUsingPrev() {
+        SdaList<Integer> list = exercises.createList(1,2,3,4,5);
+
+        list.reverseWithUsingPrev();
+
+        for (Integer integer : list) {
+
+            System.out.println(integer);
+        }
+    }
+
+    @Test
+    void test_copy() {
+
+        SdaList<Integer> list = exercises.createList(1,2,3,4,5);
+
+        SdaList<Integer> copy = list.copy();
+
+        for (Integer integer : copy) {
+
+            System.out.println(integer);
+        }
+
+
+        for (Integer integer1 : list) {
+
+            System.out.println(integer1);
+        }
+
+    }
+
+    @Test
+    void test_addAt1() {
+
+
+        SdaList<Integer> list = exercises.createList(1,2,3,4,5);
+
+        list.addAt(2, 9,8,7);
+
+        for (Integer integer : list) {
+
+            System.out.println(integer);
+        }
     }
 }

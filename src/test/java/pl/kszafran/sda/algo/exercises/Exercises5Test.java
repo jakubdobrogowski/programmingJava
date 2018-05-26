@@ -138,7 +138,24 @@ public class Exercises5Test {
     }
 
     @Test
+    void test_reverseStack2() {
+
+        Deque<Integer> intsStack = new ArrayDeque<>();
+        intsStack.push(5);
+        intsStack.push(4);
+        intsStack.push(3);
+        intsStack.push(2);
+        intsStack.push(1);
+
+        System.out.println(intsStack);
+        exercises.reverseStack(intsStack);
+        System.out.println(intsStack);
+    }
+
+    @Test
     void test_evaluate() {
+
+        exercises.evaluate("6 * 8 + 34 / 17");
         assertEquals(4, exercises.evaluate("10 - 6"));
         assertEquals(62, exercises.evaluate("2 * 3 + 7 * 8"));
         assertEquals(10, exercises.evaluate("( 2 + 6 ) * 10 / 8"));
@@ -154,5 +171,11 @@ public class Exercises5Test {
         assertThrows(IllegalArgumentException.class, () -> exercises.evaluate("4 * min ( 30 , 10 , 50 )"));
         assertThrows(IllegalArgumentException.class, () -> exercises.evaluate("4 * min ( 30 , max ( 10 , 50 )"));
         assertThrows(IllegalArgumentException.class, () -> exercises.evaluate("4 * min 30 , max ( 10 , 50 ) )"));
+    }
+
+    @Test
+    void test_evaluate2() {
+
+        exercises.showMeEvaluate("( 2 + 2 ) * 200");
     }
 }

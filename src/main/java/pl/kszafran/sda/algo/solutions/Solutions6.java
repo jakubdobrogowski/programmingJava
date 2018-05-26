@@ -24,7 +24,9 @@ public class Solutions6 extends Exercises6 {
         tree.getRightChild().ifPresent(right -> preOrder(right, visitor));
     }
 
+
     @Override
+
     public <T> List<T> traverseInOrder(SdaTree<T> tree) {
         List<T> visited = new ArrayList<>();
         inOrder(tree, visited::add);

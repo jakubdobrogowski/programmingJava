@@ -17,10 +17,10 @@ public class Exercises0Test {
 
     private Exercises0 exercises = new Exercises0();
 
-    private Book effectiveJava   = new Book("Effective Java", "Joshua Bloch", 3);
-    private Book finnishGrammar  = new Book("Finnish: An Essential Grammar", "Fred Karlsson", 3);
-    private Book cleanCode       = new Book("Clean Code", "Robert C. Martin", 1);
-    private Book cleanCoder      = new Book("The Clean Coder", "Robert C. Martin", 1);
+    private Book effectiveJava = new Book("Effective Java", "Joshua Bloch", 3);
+    private Book finnishGrammar = new Book("Finnish: An Essential Grammar", "Fred Karlsson", 3);
+    private Book cleanCode = new Book("Clean Code", "Robert C. Martin", 1);
+    private Book cleanCoder = new Book("The Clean Coder", "Robert C. Martin", 1);
     private Book javaConcurrency = new Book("Java Concurrency in Practice", "Brian Goetz", 1);
 
     @Test

@@ -1,5 +1,6 @@
 package pl.kszafran.sda.algo.exercises;
 
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -58,7 +59,7 @@ public class Exercises1 {
      */
     public int lcm(int... numbers) {
 
-        return 0;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
 
