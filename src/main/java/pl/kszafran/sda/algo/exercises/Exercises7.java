@@ -14,7 +14,17 @@ public class Exercises7 {
      * ma wartość większą lub równą wartości swoich dzieci.
      */
     public boolean isHeap(int[] array) {
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        for (int i = 0; i < array.length / 2; i++) {
+
+            int firstChild = 2 * i + 1;
+            int secondChild = 2 * i + 2;
+            if (array[i] < array[firstChild] || (secondChild < array.length && array[i] < array[secondChild])) {
+
+                return false;
+            }
+        }
+        return true;
     }
 
     public <T extends Comparable<T>> SdaHeap<T> createHeap(T[] heap, int capacity) {
@@ -55,18 +65,71 @@ public class Exercises7 {
 
         // zakładamy, że "heap" jest poprawnym kopcem
         public FixedSizeSdaHeap(T[] heap, int capacity) {
+
             this.heap = Arrays.copyOf(heap, capacity);
             this.size = heap.length;
         }
 
         @Override
         public void push(T element) {
-            throw new UnsupportedOperationException("Not implemented yet");
+
+            if (heap.length == size) throw new IllegalStateException();
+
+            heap[size] = element;
+            int child = size;
+            int parent = (size - 1) / 2;
+            while (child > 0 && heap[child].compareTo(heap[parent]) > 0) {
+
+                swap(child, parent);
+                child = parent;
+                parent = (child - 1) / 2;
+            }
+            size++;
         }
+
+        private void swap(int a, int b) {
+
+            T temp = heap[a];
+            heap[a] = heap[b];
+            heap[b] = temp;
+        }
+
 
         @Override
         public T pop() {
-            throw new UnsupportedOperationException("Not implemented yet");
+            T resoult = heap[0];
+            heap[0] = heap[size - 1];
+            heap[size - 1] = null;
+            size--;
+
+            int firstChild = 1;
+            int secondChild = 2;
+            int current = 0;
+            while (heap[current].compareTo(heap[firstChild]) < 0 ||
+                    (secondChild < heap.length && heap[current].compareTo(heap[secondChild]) < 0)) {
+
+                if (firstChild > secondChild) {
+
+                    swap(firstChild, current);
+                    current = firstChild;
+                    secondChild = 2 * firstChild + 2;
+                    firstChild = 2 * firstChild + 1;
+                } else {
+
+                    swap(secondChild, current);
+                    current = secondChild;
+                    firstChild = 2 * secondChild + 1;
+                    secondChild = 2 * secondChild + 2;
+                }
+
+                if(heap[firstChild] == null ||heap[secondChild] == null ){
+
+                    break;
+                }
+
+            }
+
+            return resoult;
         }
 
         @Override
@@ -87,7 +150,7 @@ public class Exercises7 {
 
         /**
          * Wstawia nowy element do drzewa BST.
-         *
+         * <p>
          * Jeśli element o takiej samej wartości już znajduje się w drzewie,
          * zostaje zastąpiony przez nowy element.
          */
@@ -95,22 +158,22 @@ public class Exercises7 {
 
         /**
          * Zwraca true, jeśli podany element znajduje się w drzewie.
-         *
+         * <p>
          * Uwaga: elementy należy porównywać poprzez .compareTo(..), nie .equals(..).
          */
         boolean contains(T element);
 
         /**
          * Usuwa element z drzewa BST (jeśli taki istnieje).
-         *
+         * <p>
          * Podpowiedź: należy rozpatrzyć trzy przypadki:
          * - usuwany węzeł nie ma dzieci
          * - usuwany węzeł ma jedno dziecko
          * - usuwany węzeł ma dwoje dzieci
-         *
+         * <p>
          * Uwaga: zauważ, że nasza implementacja Node nie przechowuje referencji na rodzica (parent),
          * więc nie każde rozwiazanie znalezione w Internecie się dla nas nadaje.
-         *
+         * <p>
          * Podpowiedź: ta stronka może się tutaj bardziej przydać niż Wikipedia:
          * https://www.geeksforgeeks.org/binary-search-tree-set-2-delete/
          */

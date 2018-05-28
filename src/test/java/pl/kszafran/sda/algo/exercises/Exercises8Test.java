@@ -69,7 +69,7 @@ public class Exercises8Test {
                         "")));
         assertEquals("Header:value", exercises.mergeHeaders("Header:value"));
         assertEquals("", exercises.mergeHeaders(""));
-        assertThrows(IllegalArgumentException.class, () -> exercises.mergeHeaders("Header=value"));
+        assertThrows(IllegalArgumentException.class, () -> exercises.mergeHeaders("Header=value\nHead:nnn"));
     }
 
     @Test

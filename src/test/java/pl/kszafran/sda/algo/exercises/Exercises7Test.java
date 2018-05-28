@@ -32,13 +32,13 @@ public class Exercises7Test {
     void test_SdaHeap_push() {
         SdaHeap<Integer> heap = exercises.createHeap(new Integer[]{9, 8, 7, 6, 5, 4, 3}, 15);
         heap.push(1);
-        assertArrayEquals(heap.toArray(), new Integer[]{9, 8, 7, 6, 5, 4, 3, 1});
+        assertArrayEquals(new Integer[]{9, 8, 7, 6, 5, 4, 3, 1}, heap.toArray());
         heap.push(6);
-        assertArrayEquals(heap.toArray(), new Integer[]{9, 8, 7, 6, 5, 4, 3, 1, 6});
+        assertArrayEquals(new Integer[]{9, 8, 7, 6, 5, 4, 3, 1, 6}, heap.toArray());
         heap.push(8);
-        assertArrayEquals(heap.toArray(), new Integer[]{9, 8, 7, 6, 8, 4, 3, 1, 6, 5});
+        assertArrayEquals(new Integer[]{9, 8, 7, 6, 8, 4, 3, 1, 6, 5}, heap.toArray());
         heap.push(10);
-        assertArrayEquals(heap.toArray(), new Integer[]{10, 9, 7, 6, 8, 4, 3, 1, 6, 5, 8});
+        assertArrayEquals(new Integer[]{10, 9, 7, 6, 8, 4, 3, 1, 6, 5, 8}, heap.toArray());
         assertEquals(11, heap.size());
 
         assertThrows(IllegalStateException.class, () -> exercises.createHeap(new Integer[]{5, 4, 3, 2}, 4).push(9));
